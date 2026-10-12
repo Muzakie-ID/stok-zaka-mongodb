@@ -12,9 +12,7 @@
         }
     },
     "rewrites": [
-        {
-            "source": "/((?!build/).*)",
-            "destination": "/api/index.php"
-        }
+        { "source": "/diag", "destination": "/api/diag.php" },
+        { "source": "/((?!build/).*)", "destination": "/api/index.php" }
     ]
 }
