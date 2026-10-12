@@ -25,3 +25,5 @@ Homestead.yaml
 Thumbs.db
 
 /supervisord.pid
+
+.envimportvercel
