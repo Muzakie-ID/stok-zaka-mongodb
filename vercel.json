@@ -8,7 +8,7 @@
         "api/index.php": {
             "runtime": "vercel-php@0.7.4",
             "maxDuration": 30,
-            "excludeFiles": ["node_modules/**", "vercel-static/**"]
+            "excludeFiles": "{node_modules/**,vercel-static/**}"
         }
     },
     "rewrites": [
