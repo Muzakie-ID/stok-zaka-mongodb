@@ -8,7 +8,10 @@
 
 declare(strict_types=1);
 
-header('Content-Type', 'text/plain; charset=utf-8');
+// CATATAN: signature header() adalah (string $header, bool $replace, ...).
+// Di bawah strict_types, mengirim string di argumen kedua melempar TypeError
+// fatal sebelum output apa pun (inilah penyebab /diag 500 body kosong).
+header('Content-Type: text/plain; charset=utf-8');
 
 $out = [];
 $out[] = 'PHP: ' . PHP_VERSION;
