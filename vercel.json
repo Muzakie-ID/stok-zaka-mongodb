@@ -1,13 +1,14 @@
 {
     "$schema": "https://openapi.vercel.sh/vercel.json",
     "framework": null,
-    "buildCommand": "npm install && npm run build",
+    "buildCommand": "npm install && npm run build && mkdir -p vercel-static && cp -r public/build vercel-static/build",
     "installCommand": null,
-    "outputDirectory": "public",
+    "outputDirectory": "vercel-static",
     "functions": {
         "api/index.php": {
             "runtime": "vercel-php@0.7.4",
-            "maxDuration": 30
+            "maxDuration": 30,
+            "excludeFiles": ["node_modules/**", "vercel-static/**"]
         }
     },
     "rewrites": [
