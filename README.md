@@ -77,8 +77,14 @@ Akun admin pertama dibuat oleh `AdminSeeder` (email dari `ADMIN_EMAIL`, password
 | `CACHE_STORE` | `mongodb` |
 | `QUEUE_CONNECTION` | `sync` |
 | `LOG_CHANNEL` | `stderr` |
+| `VIEW_COMPILED_PATH` | `/tmp/views` |
+| `APP_CONFIG_CACHE` | `/tmp/config.php` |
+| `APP_EVENTS_CACHE` | `/tmp/events.php` |
+| `APP_PACKAGES_CACHE` | `/tmp/packages.php` |
+| `APP_ROUTES_CACHE` | `/tmp/routes.php` |
+| `APP_SERVICES_CACHE` | `/tmp/services.php` |
 
-Build dijalankan lewat `vercel.json`: `composer install --no-dev` + `npm install` + `npm run build`. Runtime `vercel-php@0.7.4` (PHP 8.3) sudah menyertakan ekstensi `mongodb`. Request dinamis diarahkan ke `api/index.php`; file statis `public/build/` dilayani langsung.
+Build dijalankan lewat `vercel.json`: `npm install` + `npm run build` (asset Vite). Dependency Composer diinstall otomatis oleh runtime `vercel-php@0.7.4` (PHP 8.3, ekstensi `mongodb` tersedia). Request dinamis diarahkan ke `api/index.php`; file statis `public/build/` dilayani langsung.
 
 ## Catatan Serverless
 
