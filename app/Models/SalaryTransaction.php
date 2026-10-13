@@ -47,17 +47,17 @@ class SalaryTransaction extends Model
     {
         $pipeline = [
             [
-                '\$match' => ['user_id' => (string) $userId],
+                '$match' => ['user_id' => (string) $userId],
             ],
             [
-                '\$group' => [
+                '$group' => [
                     '_id' => null,
                     'saldo' => [
-                        '\$sum' => [
-                            '\$cond' => [
-                                ['\$eq' => ['\$type', self::TYPE_EARN]],
-                                '\$amount',
-                                ['\$multiply' => ['\$amount', -1]],
+                        '$sum' => [
+                            '$cond' => [
+                                ['$eq' => ['$type', self::TYPE_EARN]],
+                                '$amount',
+                                ['$multiply' => ['$amount', -1]],
                             ],
                         ],
                     ],
