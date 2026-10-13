@@ -20,6 +20,8 @@ $out[] = 'OpenSSL: ' . (defined('OPENSSL_VERSION_TEXT') ? OPENSSL_VERSION_TEXT :
 $out[] = 'Ekstensi mongodb: ' . (extension_loaded('mongodb') ? 'ADA' : 'TIDAK ADA');
 $out[] = 'Versi ekstensi mongodb: ' . (extension_loaded('mongodb') ? (phpversion('mongodb') ?: '?') : '-');
 $out[] = 'Class MongoDB\Driver\Manager: ' . (class_exists('MongoDB\Driver\Manager') ? 'ADA' : 'TIDAK ADA');
+$out[] = 'LD_LIBRARY_PATH: ' . (getenv('LD_LIBRARY_PATH') ?: '(kosong)');
+$out[] = 'extension_dir: ' . (ini_get('extension_dir') ?: '-');
 
 $exts = get_loaded_extensions();
 sort($exts);
