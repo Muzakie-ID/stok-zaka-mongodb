@@ -78,7 +78,22 @@ foreach ([
     }
 }
 
-$out[] = 'OPENSSL_CONF: ' . (getenv('OPENSSL_CONF') ?: '(kosong)');
+$ocf = getenv('OPENSSL_CONF') ?: '';
+$out[] = 'OPENSSL_CONF: ' . ($ocf ?: '(kosong)');
+if ($ocf && is_file($ocf)) {
+    $isi = (string) file_get_contents($ocf);
+    // Hapus baris kosong/komentar agar ringkas
+    $isi = implode("\n", array_filter(
+        explode("\n", $isi),
+        fn ($l) => trim($l) !== '' && ! str_starts_with(trim($l), '#')
+    ));
+    $out[] = '--- isi OPENSSL_CONF (tanpa komentar) ---';
+    foreach (explode("\n", $isi) as $l) {
+        $out[] = '  ' . trim($l);
+    }
+} elseif ($ocf) {
+    $out[] = 'OPENSSL_CONF: file tidak ditemukan';
+}
 
 // --- Probe TLS mentah ke Atlas (tanpa libmongoc) ---
 $host = 'ac-grafhpw-shard-00-00.zqamugo.mongodb.net:27017';
