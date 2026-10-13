@@ -22,6 +22,32 @@ $out[] = 'Versi ekstensi mongodb: ' . (extension_loaded('mongodb') ? (phpversion
 $out[] = 'Class MongoDB\Driver\Manager: ' . (class_exists('MongoDB\Driver\Manager') ? 'ADA' : 'TIDAK ADA');
 $out[] = 'LD_LIBRARY_PATH: ' . (getenv('LD_LIBRARY_PATH') ?: '(kosong)');
 $out[] = 'extension_dir: ' . (ini_get('extension_dir') ?: '-');
+$out[] = 'enable_dl: ' . (ini_get('enable_dl') ?: '-');
+$out[] = 'ffi.enable: ' . (ini_get('ffi.enable') ?: '-');
+$out[] = 'fungsi dl(): ' . (function_exists('dl') ? 'ADA' : 'TIDAK ADA');
+
+// --- Loader runtime (FFI preload + dl) ---
+require __DIR__ . '/bootstrap-mongo.php';
+
+$out[] = '--- Loader bootstrap-mongo ---';
+foreach ($GLOBALS['zaka_mongo']['langkah'] as $langkah) {
+    $out[] = '  ' . $langkah;
+}
+if ($GLOBALS['zaka_mongo']['langkah'] === []) {
+    $out[] = '  (tidak perlu - sudah termuat via php.ini)';
+}
+$out[] = 'Hasil loader: ' . ($GLOBALS['zaka_mongo']['hasil'] ?? '-');
+$out[] = 'Ekstensi mongodb setelah loader: ' . (extension_loaded('mongodb') ? 'ADA' : 'TIDAK ADA');
+
+// Deteksi DT_RUNPATH $ORIGIN pada mongodb.so (hasil patchelf dari buildCommand)
+$soPath = __DIR__ . '/ext/mongodb.so';
+if (is_file($soPath)) {
+    $head = (string) file_get_contents($soPath, false, null, 0, 4096);
+    $out[] = 'mongodb.so DT_RUNPATH $ORIGIN: ' . (str_contains($head, '$ORIGIN') ? 'ADA' : 'TIDAK (patchelf belum jalan)');
+} else {
+    $out[] = 'mongodb.so: FILE TIDAK ADA di ' . $soPath;
+}
+$out[] = 'Class MongoDB\Driver\Manager setelah loader: ' . (class_exists('MongoDB\Driver\Manager') ? 'ADA' : 'TIDAK ADA');
 
 $exts = get_loaded_extensions();
 sort($exts);
@@ -66,7 +92,7 @@ if ($uri && extension_loaded('mongodb')) {
 } elseif (! $uri) {
     $out[] = 'KONEKSI MONGODB: dilewati (MONGODB_URI kosong)';
 } else {
-    $out[] = 'KONEKSI MONGODB: dilewati (ekstensi mongodb tidak ada)';
+    $out[] = 'KONEKSI MONGODB: dilewati (ekstensi mongodb tidak ada setelah loader)';
 }
 
 echo implode("\n", $out) . "\n";

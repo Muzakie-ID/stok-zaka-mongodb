@@ -1,7 +1,7 @@
 {
     "$schema": "https://openapi.vercel.sh/vercel.json",
     "framework": null,
-    "buildCommand": "npm install && npm run build && mkdir -p vercel-static && cp -r public/build vercel-static/build",
+    "buildCommand": "npm install && npm run build && mkdir -p vercel-static && cp -r public/build vercel-static/build && (patchelf --version >/dev/null 2>&1 && patchelf --set-rpath '$ORIGIN' api/ext/mongodb.so || echo 'patchelf tidak tersedia - fallback ke loader runtime FFI')",
     "installCommand": null,
     "outputDirectory": "vercel-static",
     "functions": {
