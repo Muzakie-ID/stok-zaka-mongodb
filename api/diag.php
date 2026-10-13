@@ -78,6 +78,32 @@ foreach ([
     }
 }
 
+$out[] = 'OPENSSL_CONF: ' . (getenv('OPENSSL_CONF') ?: '(kosong)');
+
+// --- Probe TLS mentah ke Atlas (tanpa libmongoc) ---
+$host = 'ac-grafhpw-shard-00-00.zqamugo.mongodb.net:27017';
+$probe = function (array $sslOpts, string $label) use ($out, $host) {
+    $ctx = stream_context_create(['ssl' => $sslOpts]);
+    $errNo = 0; $errStr = '';
+    $t0 = microtime(true);
+    $fp = @stream_socket_client(
+        'ssl://' . $host,
+        $errNo,
+        $errStr,
+        10,
+        STREAM_CLIENT_CONNECT,
+        $ctx
+    );
+    if ($fp) {
+        $out[] = "PROBE {$label}: OK (" . round((microtime(true) - $t0) * 1000) . 'ms, peer=' . stream_socket_get_name($fp, true) . ')';
+        fclose($fp);
+    } else {
+        $out[] = "PROBE {$label}: GAGAL ({$errNo}) {$errStr}";
+    }
+};
+$probe([], 'default');
+$probe(['crypto_method' => STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT], 'TLS1.2');
+
 $uri = getenv('MONGODB_URI');
 if ($uri && extension_loaded('mongodb')) {
     $t0 = microtime(true);
